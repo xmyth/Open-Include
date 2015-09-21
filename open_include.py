@@ -337,6 +337,10 @@ class OpenIncludeThread(threading.Thread):
         if s.get('use_strict'):
             return self.try_open(window, self.resolve_relative(os.path.dirname(view.file_name()), paths[0]))
 
+        for inc in view.window().project_data().get("include", []):
+            if self.try_open( window, os.path.join(inc, paths[0]).replace('\\', '/') ):
+                return True
+
         paths = self.expand_paths_with_extensions(window, view, paths)
         if cache['look_into_folders'] and not skip_folders:
             paths = self.expand_paths_with_sub_and_parent_folders(window, view, paths)
